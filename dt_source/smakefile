@@ -5,8 +5,8 @@ CCFLAGS=DEF=DEBUGLOG
 OBJECTS=StartUp.o LibInit.o libfuncs.o qoicustom.o
 
 All: $(OBJECTS) /devs/datatypes/QOI
-	slink FROM $(OBJECTS) TO /classes/datatypes/qoi.datatype \
-				WITH LIB:utillib.with LIB lib:sc.lib lib:amiga.lib NODEBUG NOICONS
+  slink FROM $(OBJECTS) TO /classes/datatypes/qoi.datatype \
+        WITH LIB:utillib.with LIB lib:sc.lib lib:amiga.lib NODEBUG NOICONS
   copy /devs/datatypes devs:datatypes all quiet
   copy /classes/datatypes sys:classes/datatypes all quiet
 
@@ -22,12 +22,12 @@ Clean:
 Test:
   adddatatypes refresh
   avail flush >nil:
-	multiview /test_images/qoi_logo.qoi
+  multiview /test_images/qoi_logo.qoi
 
 Bench:
   adddatatypes refresh
   avail flush >nil:
-	picdtbench /test_images/wikipedia_008.qoi
+  picdtbench /test_images/wikipedia_008.qoi
 
 %.o: %.c
   sc $(CCFLAGS) $(input)

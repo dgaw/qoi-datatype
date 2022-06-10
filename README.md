@@ -1,5 +1,7 @@
-An AmigaOS datatype for the Quite OK Image Format (.qoi)
-========================================================
+An AmigaOS datatype for the Quite OK Image Format
+=================================================
+
+![Screenshot](https://raw.githubusercontent.com/dgaw/qoi-datatype/master/screenshot.png)
 
 QOI is a fast, lossless image compression format. QOI files are
 similar in size to PNG while offering much faster encoding

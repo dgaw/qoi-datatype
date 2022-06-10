@@ -1,13 +1,5 @@
-Short: Datatype for the Quite OK Image Format (.qoi files)
-Type: util/dtype
-Version: 0.9
-Uploader: d.ami.angaweda@gmail.com (Damian Gaweda)
-Author: d.ami.angaweda@gmail.com (Damian Gaweda)
-Architecture: m68k-amigaos
-Requires: OS 3.0+,picture.datatype v43
-
-An AmigaOS datatype for the Quite OK Image Format (.qoi files)
-==============================================================
+An AmigaOS datatype for the Quite OK Image Format (.qoi)
+========================================================
 
 QOI is a fast, lossless image compression format. QOI files are
 similar in size to PNG while offering much faster encoding
@@ -27,7 +19,7 @@ Requirements
 Changes
 -------
 
-* 0.9 (2022-06-01) - Initial release
+* 0.6 (2022-06-10) - Initial release
 
 Credits
 -------
@@ -51,4 +43,6 @@ Source code
 -----------
 
 Source code is available at:
-https://github.com/dgaw/qoi-datatype [TODO: create repo]
+https://github.com/dgaw/qoi-datatype
+
+Built with SAS/C 6.50.

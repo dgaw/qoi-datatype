@@ -34,10 +34,10 @@ struct Library *SuperClassBase = NULL;
 struct Library *IFFParseBase = NULL;
 
 #define VERSION 0
-#define REVISION 9
+#define REVISION 6
 
 char __aligned ExLibName[] = "qoi.datatype";
-char __aligned ExLibID[] = "qoi.datatype 0.9";
+char __aligned ExLibID[] = "qoi.datatype 0.6";
 char __aligned Copyright[] =
     "(C)opyright 2022 by Damian Gaweda. All rights reserved.";
 

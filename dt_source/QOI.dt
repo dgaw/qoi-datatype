@@ -1,0 +1,6 @@
+# Recog file definition. For use with MakeDT.rexx
+FileName=/devs/datatypes/QOI
+DTName=QOI,qoi
+ID=pict,qoi
+Recog=#?,qoif
+Flags=Binary,y,0

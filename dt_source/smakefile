@@ -1,0 +1,33 @@
+# See https://fossies.org/linux/unzip/amiga/smakefile
+# For a SAS/C makefile format reference
+
+CCFLAGS=DEF=DEBUGLOG
+OBJECTS=StartUp.o LibInit.o libfuncs.o qoicustom.o
+
+All: $(OBJECTS) /devs/datatypes/QOI
+	slink FROM $(OBJECTS) TO /classes/datatypes/qoi.datatype \
+				WITH LIB:utillib.with LIB lib:sc.lib lib:amiga.lib NODEBUG NOICONS
+  copy /devs/datatypes devs:datatypes all quiet
+  copy /classes/datatypes sys:classes/datatypes all quiet
+
+/devs/datatypes/QOI:
+  rx scripts/makedt/makedt.rexx qoi.dt
+
+# "minus" ignores error return codes
+Clean:
+  -delete \#?.o quiet
+  -delete /classes/datatypes/qoi.datatype quiet
+  -delete /devs/datatypes/qoi quiet
+
+Test:
+  adddatatypes refresh
+  avail flush >nil:
+	multiview /test_images/qoi_logo.qoi
+
+Bench:
+  adddatatypes refresh
+  avail flush >nil:
+	picdtbench /test_images/wikipedia_008.qoi
+
+%.o: %.c
+  sc $(CCFLAGS) $(input)

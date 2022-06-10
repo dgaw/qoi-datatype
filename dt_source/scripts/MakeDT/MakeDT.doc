@@ -1,0 +1,252 @@
+MakeDT.doc - documentation for MakeDT.rexx
+$VER: MakeDT.doc 1.3 (17.11.96)
+Written by Michal Letowski
+
+
+                          ### Table Of Contents ###
+
+1. Disclaimer
+2. Introduction
+3. How To?
+4. Usage
+5. Other Files
+6. History
+7. Author Info
+
+
+                            *** 1. Disclaimer ***
+
+	This program is given 'as is'. No warranty is given or implied. Use it
+at your own risk. In fact, I expect some informations in this document to be
+inaccurate and incomplete. This document is based only on Commodore's Includes
+and AutoDocs, some experiments and (many) assumptions. If you know better,
+please feel free to make corrections.
+	This program and documentation are placed in Public Domain - do with
+them whatever you want. If you have ANY opinion on my work, PLEASE send me an
+E-Mail message - I like the feedback.
+
+
+                           *** 2. Introduction ***
+
+	Workbench 3.0 introduced cool new feature: DataTypes. DataTypes
+provide common ground for dealing with different types of data found on modern
+computers. With DataTypes you don't have to worry about complexities of file
+formats. For example, a paint program using DataTypes could load any type of
+pictures: ILBM's, GIF's, JPEG's etc. and save in any of the formats supported.
+Or you could load/save different formats of sound samples. The DataTypes can
+deal with any kind of data.
+	Another advantage of DataTypes is OLE (Object Linking and Embedding).
+This technique is already used on PC's and Macs. It allows a program to
+transfer control on an object to another program. With OLE you could import a
+picture into your favourite wordprocessor and then just by clicking on it call
+a paint program, which would automatically load this picture.
+	And I should mention DataTypes' ability to recognize type of data:
+even if they don't know what to do with a file, they can tell you what this
+file contains. This is similar to features of some Public Domain programs:
+WhatIs and CFX, for example. But DataTypes have an advantage of being
+sanctioned by Commodore, which makes them available to everyone.
+	Unfortunately, these capabilities still wait to be uncovered. Very few
+programs actually use DataTypes. In fact, only Workbench programs and some
+viewers take advantage of them. This is partially due to the fact, that there
+is very little documentation about DataTypes.
+	My goal is to change it. This program will let you create new
+DataTypes (well, only part of them) easily. It isn't the best program in the
+world (I'm writing a full-featured DataTypes editor) but it's usable. What's
+more - it has some advantages over Commodore's DTDesc (eg. you can specify
+tags, tools and choose your own TypeID). As an added bonus, MakeDT comes with
+source, so you can modify it to suit your needs.
+
+
+                              *** 3. How to? ***
+
+	DataTypes sub-system consists of 3 parts:
+· datatypes.library is located in your LIBS: directory and is necessary to do
+anything.
+· files located in LIBS:DataTypes/ (they end with '.datatype') are responsible
+for translating different formats. These are quite complicated programs and
+require good amount of knowledge and programming skills to write.
+Unfortunately, my program doesn't allow you to create them :-(yet :-).
+· files located in DEVS:DataTypes/ are used to recognize type of a file. They
+are stored in IFF format and will be our main area of interest. From now by
+DataTypes I will mean only these files.
+	Additionally, there is AddDataType command located in C: directory.
+If you create or modify a DataType you should type
+AddDataType <DataType name with path> REFRESH
+in Shell window - otherwise new DataType will not be recognized.
+
+                       *** 3a File type recognition ***
+
+	There are 3 methods for detecting file's type:
+· file name matching;
+· file contents matching;
+· custom function.
+	The first method uses simple AmigaDOS pattern matching to recognize
+type of a file. For example, you could enter '#?.info' to select icon files or
+'.backdrop' for detecting Workbench backdrops. Any valid AmigaDOS pattern can
+be used. This method is very fast (as it doesn't involve opening a file and
+reading from it), but not accurate. On Amiga, files rarely have to have
+special extension (in contrast to PC world, where many programs rely strictly
+on names conventions). As such it should be used with some caution and only if
+more advanced methods can't be used.
+	The second method is more flexible. It bases on a fact that programs
+usually write their own unique headers when saving data. If this is true, then
+we are able to determine type of a file just by looking at its contents. For
+example every GIF picture has 'GIF87a' or 'GIF89a' string at the beginning. To
+utilize this method you provide up to 64 chars that should match first chars
+in a file. You can also use 'match any' char. For GIF's this would look like
+'GIF8?a' - the question mark matches '7' or '9'. It is advised, that you have
+some documentation describing the format so you won't make false assumptions.
+	Last method is the most flexible one. But... you have to be a
+programmer and write a program (in C or Assembler). This program will then
+look at file to check if it contains data proper for a given format. This
+method is used for Commodore's MacPaint DataTypes. For more details look at
+include files.
+
+                           *** 3b Identification ***
+
+	Each DataType is identified by 4 strings:
+· <name> is a descriptive name of a DataType. It appears in MultiView after
+selecting About. This name may be of arbitrary length and may contain spaces.
+· <base name> indicates which .datatype library should be used to interpret
+file's contents. ".datatype" is appended to <base name> and such string is
+used by DataTypes to open a library. For your own DataTypes (which don't
+usually come with an interpreter) you should perhaps use "binary", "exe" (for
+executables) or "cli". [Note: binary.datatype, exe.datatype and cli.datatype
+are 3rd party DataTypes available eg. on Aminet://util/dtype.]
+· <group id> identifies a group that the file belongs to. Currently defined
+groups are:
+	· syst (System) - system files;
+	· text (Text) - textual files;
+	· docu (Document) - documents (spreadsheet data, text with pictures etc.);
+	· soun (Sound) - sound samples;
+	· inst (Instrument) - musical instruments;
+	· musi (Music) - songs;
+	· pict (Picture) - graphics;
+	· anim (Animation) - animations;
+	· movi (Movie) - animation with sound.
+
+· <type id> is up to 4 chars long and (as <group id>) case sensitive. It must
+also be unique and should be lower-cased.
+
+                          *** 3c Other features ***
+
+	Each DataType may have some tags stored. But don't ask me what they
+are used for...
+	Additionally, DataType can contain tool description for use with OLE
+(or at least I think so). Unfortunately, no programs seems to take advantage
+of this, so I was unable to test this feature. However it's there...
+
+
+                               *** 4. Usage ***
+
+	MakeDT works in batch mode. You prepare description file and give it
+as a parameter. MakeDT will process it and create DataType description.
+	Description file is an ASCII file. Each line begins with a command
+word and it's parameters after '=' sign. Lines beginning with a '#' 
+('hash') are skipped.
+	Commands and parameters enclosed in [] can be omitted.
+	Available commands (case is not important):
+
+[FileName]=<Where description should be placed>
+	Specifies name of DataType recog file (overridden by a CLI parameter).
+
+DTName=<name>,<basename>
+	<name> is the name of the DataType, as described in chapter 3b. For
+conformance to Commodore's DTDesc, it should be the same as file part of
+<FileName>.
+	<basename> is equivalent to <base name> described in chapter 3b.
+
+[Version]=<version>.<revision>
+	<version> is a major version number of the DataType.
+	<revision> is a minor version number of the DataType.
+
+ID=<group id>,<type id>
+	As described in chapter 3b.
+
+Recog=<file name pattern>[,<contents pattern>]
+	Recognition patterns, as described in chapter 3a. <file name pattern>
+is an AmigaDOS pattern to match file name ('#?' for 'match any'). <contents
+pattern> is a pattern to match file's contents. <contents pattern> may
+contain:
+	· strings (eg. 'FORM'), one letter for one byte of a file#
+	· hexadecimal values (one for each byte), preceded by '\$' 
+chars(eg. \$00\$00 for two NUL characters);
+	· 'match any' chars (one for each byte) in '\?' form;
+	· to include '\' char enter '\\'.
+	<contents pattern> is optional.
+	As an example, GIF file (see chapter 3a) could be described as follows:
+Recog=#?.gif                    # Only files with #?.gif extension are matched
+Recog=#?,GIF8\?a                # Any name is matched and the file must begin
+                                # with 'GIF8' string
+Recog=#?,\$47\$49\$46\$38\?\$61 # As above, but using hexadecimal encoding
+
+Flags=<type=Binary|ASCII|IFF|Other>,<case=y|n>,<priority>
+	Flags for the DataType. <type> is general type of a file. <case>
+specifies whether file-contents matching should be case-sensitive ('y') or
+case-insensitive ('n'). For binary files this should be 'y', for ASCII files
+- depending on file type. <priority> describes the order in which DataTypes
+are checked when trying to recognize file type. <priority> must be in 0-65535
+range. DataTypes with higher priority are checked first. Typical priority is
+0.
+
+[Code]=<name of file containing recog function>
+	If you use custom function for recognition (see chapter 3a), enter
+name of the executable file here. Otherwise don't include this tag.
+
+[Tool]=<type=INFO|BROWSE|MAIL|EDIT|PRINT>,<name>,<start=CLI|WORKBENCH|AREXX>
+[Tool]=
+...
+[Tool]=
+	Each <Tool> describes DataType's tool (as described in chapter 3c).
+<type> is type of the tool, <name> is the name of the tool <start> specifies
+how the tool should be started.
+
+[Tag]=<tag>,<tag value>
+[Tag]=
+...
+[Tag]=
+	Each <Tag> describes one DataType tag (chapter 3c). <tag> is a decimal
+or hexadecimal (if preceded by '$') number describing tag. <tag value>
+contains value for the tag and may also be either decimal or hexadecimal.
+
+	As a minimum, you must provide DTName, ID, Recog and Flags commands.
+
+
+                            *** 5. Other Files***
+
+	In Example directory you will find several example descriptions.
+	CatIFF.rexx lets you join several description files into one for
+faster load and to save disk space. Joined files are processed correctly by
+Commodore's DataTypes system.
+
+
+                              *** 6. History ***
+
+1.0 (20.12.94) - not released
+1.1 (22.11.94) - first public version
+1.2 (29.1.96)  - second public version
+	+ now can write FVER chunk
+	! fixed bug in tags conversion
+1.3 (17.11.96) - 3rd public version
+	! fixed numerous bugs
+
+
+                            *** 7. Author Info ***
+
+	My name is Michal Letowski, I'm 24 years old. I hold Master degree in
+Computer Science from Technical University of Wroclaw. I work as an
+information science teacher in XXIV Secondary School in Wroclaw.
+
+S-Mail address:
+
+Przyjazni 51/17
+53-030 Wroclaw
+POLAND
+
+E-Mail address:
+
+milet@geocities.com
+
+WWW address:
+
+http://www.geocities.com/CapeCanaveral/Lab/2769/

@@ -23,14 +23,19 @@ Changes
 
 * 0.6 (2022-06-12) - Initial release
 
+Issues
+------
+
+If you find any bugs or issues, please report them here:
+https://github.com/dgaw/qoi-datatype/issues
+
 Credits
 -------
 
 * This datatype is based on samplePNM.datatype by Andreas R. Kleinert.
   Available at: http://aminet.net/package/dev/c/C_V43-DT
 
-* I used source code from the reference QOI decoder by the author
-  of the QOI format: Dominic Szablewski
+* I used source code from the reference QOI decoder by Dominic Szablewski.
   Available at: https://github.com/phoboslab/qoi
 
 * MakeDT.rexx script by Michal Letowski is used in the build process.

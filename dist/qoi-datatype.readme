@@ -1,3 +1,11 @@
+Short: Datatype for the Quite OK Image Format (.qoi)
+Type: util/dtype
+Version: 0.6
+Uploader: d.ami.angaweda@gmail.com (Damian Gaweda)
+Author: d.ami.angaweda@gmail.com (Damian Gaweda)
+Architecture: m68k-amigaos
+Requires: OS 3.0+,picture.datatype v43
+
 An AmigaOS datatype for the Quite OK Image Format
 =================================================
 

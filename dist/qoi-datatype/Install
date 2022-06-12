@@ -1,0 +1,14 @@
+failat 21
+
+echo "This script will install qoi.datatype on drive `which sys:`"
+ask "Continue? (y/n)"
+if warn
+  copy devs/datatypes sys:devs/datatypes all
+  copy classes/datatypes sys:classes/datatypes all
+  adddatatypes refresh
+  avail flush >nil:
+  echo "Done! You can open .qoi pictures now."
+  ask "Press RETURN to close this window."
+else
+  echo "Bye!"
+endif

@@ -1,7 +1,7 @@
 # See https://fossies.org/linux/unzip/amiga/smakefile
 # For a SAS/C makefile format reference
 
-CCFLAGS=DEF=DEBUGLOG
+# CCFLAGS=DEF=DEBUGLOG
 OBJECTS=StartUp.o LibInit.o libfuncs.o qoicustom.o
 
 All: $(OBJECTS) /devs/datatypes/QOI
@@ -28,6 +28,10 @@ Bench:
   adddatatypes refresh
   avail flush >nil:
   picdtbench /test_images/wikipedia_008.qoi
+
+Readme:
+  join /README.aminet-header /README.md as /dist/qoi-datatype.readme
+  copy /README.md /dist/qoi-datatype/README.md
 
 %.o: %.c
   sc $(CCFLAGS) $(input)
